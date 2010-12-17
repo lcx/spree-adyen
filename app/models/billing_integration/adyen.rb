@@ -17,6 +17,13 @@ class BillingIntegration::Adyen < BillingIntegration
     ActiveMerchant::Billing::AdyenGateway
   end
 
+
+  def self.register
+    adyen = BillingIntegration::Adyen.first(:conditions => { :environment => Rails.env, :active => true })
+    ActiveMerchant::Billing::Base.integration_mode = adyen ? adyen.preferred_test_mode : true
+    super
+  end
+
   def self.current
     BillingIntegration::Adyen.first(:conditions => { :environment => Rails.env, :active => true })
   end

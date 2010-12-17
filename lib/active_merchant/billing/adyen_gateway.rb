@@ -19,7 +19,6 @@ module ActiveMerchant
       def merchant_id
         self.test_mode == true ? self.test_merchant_id : self.production_merchant_id
       end
-
     end
   end
 end

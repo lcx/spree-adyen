@@ -12,7 +12,7 @@ module ActiveMerchant #:nodoc:
         LIVE_URL = 'https://live.adyen.com/hpp/select.shtml'
         
         def self.service_url
-          ActiveMerchant::Billing::Base.integration_mode == :test ? TEST_URL : LIVE_URL
+          ActiveMerchant::Billing::Base.integration_mode == :production ? LIVE_URL : TEST_URL
         end
 
         def self.notification(post)
