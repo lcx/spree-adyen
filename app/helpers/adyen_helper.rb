@@ -2,7 +2,7 @@ module AdyenHelper
   def adyen_form(order)
     content = payment_service_for( order.id,
                                    order.payment_method.merchant_id,
-                                   :amount => order.amount_in_cents,
+                                   :amount => order.amount_in_cents.to_i,
                                    :currency => 'EUR',
                                    :service => :adyen,
                                    :html => { :id => 'payment_form' } ) do |service|
