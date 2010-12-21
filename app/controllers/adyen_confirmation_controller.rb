@@ -6,8 +6,8 @@ class AdyenConfirmationController < Spree::BaseController
   # Confirmation interface is a GET request
   def show
 
-    BillingIntegration::Mpay.current.verify_ip(request)
-
+#    BillingIntegration::Adyen.current.verify_ip(request)
+pp params
     check_operation(params["OPERATION"])
     check_status(params["STATUS"])
 
