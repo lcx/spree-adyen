@@ -5,17 +5,14 @@ class AdyenConfirmationController < Spree::BaseController
 
   # Confirmation interface is a GET request
   def show
+    notification = ActiveMerchant::Billing::Integrations::Adyen::Notification.new(response.request.query_string)
+    
+    order = Order.find_by_number(notification.item_id)
 
-#    BillingIntegration::Adyen.current.verify_ip(request)
-pp params
-    check_operation(params["OPERATION"])
-    check_status(params["STATUS"])
-
-    # get the order
-    order = BillingIntegration::Adyen.current.find_order(params["TID"])
-
-    case params["STATUS"]
-    when "BILLED"
+      pp notification.event_code
+    case notification.event_code
+    when "AUTHORISED"
+      pp notification.authorised?
       # check if the retrieved order is the same as the outgoing one
       if verify_currency(order, params["CURRENCY"])
 
@@ -64,15 +61,6 @@ pp params
     end
 
     render :text => "OK", :status => 200
- 
-    # Other fields (how to use them?):
-    # USER_FIELD
-    # LANGUAGE
-    # APPR_CODE
-    # PROFILE_STATUS
-    # FILTER_STATUS
-    # SUSPENDED_REASON
-    # MSG
   end
 
   private

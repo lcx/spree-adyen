@@ -9,7 +9,7 @@ class AdyenCallbacksController < Spree::BaseController
     notify = Adyen::Notification.new(request.raw_post)
     raise "Deal with me!" unless ["AUTHORISATION", "NOTIFICATIONTEST"].include? notify.event_code 
 
-    if "AUTHORISATION" == notify.event_code && notify.acknowledge
+    if notify.event_code
       @order = Order.find(notify.item_id)
       begin
         if notify.complete?
@@ -19,7 +19,6 @@ class AdyenCallbacksController < Spree::BaseController
           logger.error("Couldn't verify payment! Order id: #{@order.id}")
         end
       rescue => e
-        #@purchase_request.status = 'internal_error'
         raise
       ensure
         @order.save!

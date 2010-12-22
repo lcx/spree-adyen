@@ -14,7 +14,7 @@ module AdyenHelper
       service.skinCode(order.payment_method.preferred_skin)
  
       service.shared_secret(order.payment_method.preferred_hmac)
-      service.return_url("#{root_url}adyen_confirmation")
+      service.return_url("#{root_url}adyen_callbacks")
     end
     content
   end

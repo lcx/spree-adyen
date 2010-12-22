@@ -5,12 +5,26 @@ module ActiveMerchant #:nodoc:
     module Integrations #:nodoc:
       module Adyen
         class Notification < ActiveMerchant::Billing::Integrations::Notification
+          STATUSES = {
+            :authorised => 'AUTHORISED',
+            :refused    => 'REFUSED',
+            :cancelled  => 'CANCELLED',
+            :pending    => 'PENDING',
+            :error      => 'ERROR'
+          }
+
+          STATUSES.each do |method_name, status|
+            define_method("#{method_name}?".to_sym) do
+              event_code == status
+            end
+          end
+
           def complete?
-            ((params['eventCode'] == 'AUTHORISATION') and (params['success'] == 'true'))
+            authorized?
           end 
 
           def event_code
-            params['eventCode']
+            params['authResult']
           end
 
           def item_id
