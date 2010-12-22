@@ -14,13 +14,14 @@ module ActiveMerchant #:nodoc:
           }
 
           STATUSES.each do |method_name, status|
-            define_method("#{method_name}?".to_sym) do
+            method_name = "#{method_name}?".to_sym
+            define_method(method_name) do
               event_code == status
             end
           end
 
           def complete?
-            authorized?
+            authorised?
           end 
 
           def event_code

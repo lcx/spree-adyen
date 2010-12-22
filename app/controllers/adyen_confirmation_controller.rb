@@ -5,14 +5,12 @@ class AdyenConfirmationController < Spree::BaseController
 
   # Confirmation interface is a GET request
   def show
-    notification = ActiveMerchant::Billing::Integrations::Adyen::Notification.new(response.request.query_string)
+    notification = ActiveMerchant::Billing::Integrations::Adyen::Notification.new(request.query_string)
     
     order = Order.find_by_number(notification.item_id)
 
-      pp notification.event_code
     case notification.event_code
     when "AUTHORISED"
-      pp notification.authorised?
       # check if the retrieved order is the same as the outgoing one
       if verify_currency(order, params["CURRENCY"])
 
