@@ -14,9 +14,7 @@ class AdyenCallbacksController < Spree::BaseController
         @payment = @order.payment
         @payment.source = BillingIntegration::Adyen.current
         @payment.response_code = notify.event_code
-        @payment.started_processing!
-#        @order.psp_reference = notify.transaction_id
-        @order.next!
+        @payment.save
       else
         logger.error("Couldn't verify payment! Order id: #{@order.id}")
       end
@@ -25,8 +23,7 @@ class AdyenCallbacksController < Spree::BaseController
     ensure
       @order.save!
     end
-    
-    render :text => "[accepted]"
+    redirect_to update_checkout_path(:confirm)
   end
 
   private
