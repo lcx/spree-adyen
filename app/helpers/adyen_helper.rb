@@ -1,7 +1,8 @@
 module AdyenHelper
   def adyen_form(order)
+    payment_method = BillingIntegration::Adyen.current
     content = payment_service_for( order.id,
-                                   order.payment_method.merchant_id,
+                                   payment_method.merchant_id,
                                    :amount => order.amount_in_cents.to_i,
                                    :currency => 'EUR',
                                    :service => :adyen,
@@ -11,9 +12,9 @@ module AdyenHelper
       service.tax order.tax
 
       service.set_order_data 'Please pay for your order with Raz*War'
-      service.skinCode(order.payment_method.preferred_skin)
+      service.skinCode(payment_method.preferred_skin)
  
-      service.shared_secret(order.payment_method.preferred_hmac)
+      service.shared_secret(payment_method.preferred_hmac)
       service.return_url("#{root_url}adyen_callbacks")
     end
     content
