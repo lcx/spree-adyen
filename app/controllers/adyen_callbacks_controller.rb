@@ -11,7 +11,8 @@ class AdyenCallbacksController < Spree::BaseController
     @order = Order.find_by_number(notify.item_id)
     begin
       if notify.complete?
-        @order.payments << Payment.create(:order => @order, :source => BillingIntegration::Adyen.current, :response_code => notify.event_code)
+        @order.payment_method = BillingIntegration::Adyen.current
+        Payment.create(:order => @order, :source => BillingIntegration::Adyen.current, :response_code => notify.event_code)        
       else
         logger.error("Couldn't verify payment! Order id: #{@order.id}")
       end
