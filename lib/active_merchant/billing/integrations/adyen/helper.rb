@@ -26,10 +26,10 @@ module ActiveMerchant #:nodoc:
 
           def initialize(order, account, options = {})
             super
-            add_field('currencyCode',    'USD')
+            add_field('currencyCode',    options[:currency] || 'USD')
             add_field('shipBeforeDate',  Date.today + 10)
             add_field('skinCode',        'notavalidskincode')
-            add_field('shopperLocale',   'en_GB')
+            add_field('shopperLocale',   options[:locale] || 'en_GB')
             add_field('orderData',       'orderData')
             add_field('sessionValidity', "#{ (Date.today + 10).to_s }T11:00:00Z" )
           end
