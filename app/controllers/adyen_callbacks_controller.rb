@@ -101,8 +101,10 @@ class AdyenCallbacksController < Spree::BaseController
   end
 
   def adyen_auth
+    preffered_user =  BillingIntegration::AdyenIntegration.current.preffered_notification_user
+    preffered_password =  BillingIntegration::AdyenIntegration.current.preffered_notification_password
     authenticate_with_http_basic do |user, pass|
-      user == ADYEN_NOTIFY_USER and pass == ADYEN_NOTIFY_PASS
+      user == preffered_user and pass == preffered_password
     end
   end
 end

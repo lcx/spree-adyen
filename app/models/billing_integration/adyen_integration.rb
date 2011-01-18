@@ -9,6 +9,8 @@ class BillingIntegration::AdyenIntegration < BillingIntegration
   preference :url, :string, :default =>  'http://example.com/'
   preference :hmac, :string
   preference :skin, :string
+  preference :notification_user
+  preference :notification_password
 
   TEST_REDIRECT_URL = 'https://test.adyen.com/hpp/select.shtml'
   PRODUCTION_REDIRECT_URL = 'https://live.adyen.com/hpp/select.shtml'
