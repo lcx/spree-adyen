@@ -11,6 +11,8 @@ class BillingIntegration::AdyenIntegration < BillingIntegration
   preference :skin, :string
   preference :notification_user, :string
   preference :notification_password, :string
+  preference :soap_user, :string
+  preference :soap_password, :string
 
   TEST_REDIRECT_URL = 'https://test.adyen.com/hpp/select.shtml'
   PRODUCTION_REDIRECT_URL = 'https://live.adyen.com/hpp/select.shtml'
@@ -21,6 +23,9 @@ class BillingIntegration::AdyenIntegration < BillingIntegration
 
   def self.register
     adyen = BillingIntegration::AdyenIntegration.first(:conditions => { :environment => Rails.env, :active => true })
+    Adyen::SOAP.username = adyen.preferred_soap_user
+    Adyen::SOAP.password = adyen.preferred_soap_password
+    Adyen::SOAP.default_arguments[:merchant_account] = merchant_id
     ActiveMerchant::Billing::Base.integration_mode = adyen ? adyen.preferred_test_mode : true
     super
   end

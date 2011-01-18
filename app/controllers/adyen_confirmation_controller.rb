@@ -10,7 +10,7 @@ class AdyenConfirmationController < Spree::BaseController
     @order = Order.find_by_number(notify.item_id)
     begin
       if notify.complete?
-        Payment.create(:order => @order, :payment_method => BillingIntegration::AdyenIntegration.current, :response_code => notify.event_code)        
+        Payment.create(:order => @order, :payment_method => BillingIntegration::AdyenIntegration.current, :response_code => notify.transaction_id)        
       else
         logger.error("Couldn't verify payment! Order id: #{@order.id}")
       end
