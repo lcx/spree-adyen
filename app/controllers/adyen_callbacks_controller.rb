@@ -1,4 +1,5 @@
 class AdyenCallbacksController < Spree::BaseController
+  protect_from_forgery :except => :create
   before_filter :adyen_auth
   # possible transaction states
   TRANSACTION_STATES = ["ERROR", "RESERVED", "BILLED", "REVERSED", "CREDITED", "SUSPENDED"]
