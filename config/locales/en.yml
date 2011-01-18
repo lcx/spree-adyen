@@ -1,4 +1,6 @@
 en:
+  notification_user: Notifications user
+  notification_password: Notifications password
   production_merchant_id: Live payment merchant ID (Real CC charges)
   url: Site URL
   test_merchant_id: Test merchant id
