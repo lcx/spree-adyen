@@ -3,7 +3,7 @@ require 'uri'
 
 # Integrate our payment gateway with spree. This is needed
 # to allow configuration through spree's web interface, etc.
-class BillingIntegration::Adyen < BillingIntegration
+class BillingIntegration::AdyenIntegration < BillingIntegration
   preference :production_merchant_id, :string
   preference :test_merchant_id, :string
   preference :url, :string, :default =>  'http://example.com/'
@@ -17,15 +17,14 @@ class BillingIntegration::Adyen < BillingIntegration
     ActiveMerchant::Billing::AdyenGateway
   end
 
-
   def self.register
-    adyen = BillingIntegration::Adyen.first(:conditions => { :environment => Rails.env, :active => true })
+    adyen = BillingIntegration::AdyenIntegration.first(:conditions => { :environment => Rails.env, :active => true })
     ActiveMerchant::Billing::Base.integration_mode = adyen ? adyen.preferred_test_mode : true
     super
   end
 
   def self.current
-    BillingIntegration::Adyen.first(:conditions => { :environment => Rails.env, :active => true })
+    BillingIntegration::AdyenIntegration.first(:conditions => { :environment => Rails.env, :active => true })
   end
 
   def find_order(tid)

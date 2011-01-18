@@ -1,6 +1,6 @@
 module AdyenHelper
   def adyen_form(order)
-    payment_method = BillingIntegration::Adyen.current
+    payment_method = BillingIntegration::AdyenIntegration.current
     content = payment_service_for( order.id,
                                    payment_method.merchant_id,
                                    :amount => order.amount_in_cents.to_i,

@@ -1,33 +1,108 @@
 class AdyenCallbacksController < Spree::BaseController
-  include ActiveMerchant::Billing::Integrations
-#  before_filter :adyen_auth
-  protect_from_forgery :except => :index
+  before_filter :adyen_auth
+  # possible transaction states
+  TRANSACTION_STATES = ["ERROR", "RESERVED", "BILLED", "REVERSED", "CREDITED", "SUSPENDED"]
 
-  # this action is called by Adyen
-  # and _not_ by the end user
-  def index
-    notify = ActiveMerchant::Billing::Integrations::Adyen::Notification.new(request.query_string)
-
-    @order = Order.find_by_number(notify.item_id)
-    begin
-      if notify.complete?
-        Payment.create(:order => @order, :payment_method => BillingIntegration::Adyen.current, :response_code => notify.event_code)        
-      else
-        logger.error("Couldn't verify payment! Order id: #{@order.id}")
-      end
-    rescue => e
-      raise
-    ensure
-      @order.save!
-    end
-    redirect_to update_checkout_path(:payment, :order => @order)
+  # Confirmation interface is a GET request
+  def show
+    pp 'in show'
+    pp params
+    Adyen::Notification::HttpPost.log(request)
+    AdyenNotification.last.handle!
+  rescue ActiveRecord::RecordInvalid => e
+    # Validation failed, because of the duplicate check.
+    # So ignore this notification, it is already stored and handled.
+  ensure
+    # Always return that we have accepted the notification
+    render :text => '[accepted]'
   end
+    
+=begin
+    notification = ActiveMerchant::Billing::Integrations::Adyen::Notification.new(request.query_string)
+    
+    order = Order.find_by_number(notification.item_id)
+
+    case notification.event_code
+    when "AUTHORISED"
+      # check if the retrieved order is the same as the outgoing one
+      if verify_currency(order, params["CURRENCY"])
+
+        # create new payment object
+        payment_details = MPaySource.create (
+          :p_type => params["P_TYPE"],
+          :brand => params["BRAND"],
+          :mpayid => params["MPAYTID"]
+        )
+
+        payment_details.save!
+
+        # TODO log the payment
+        order.checkout.payments.create(
+          :amount => params["PRICE"],
+          :payment_method_id => nil,
+          :source => payment_details
+        )
+
+        payment = order.checkout.payments.first
+        payment.save!
+
+        payment_details.payment = payment
+        payment_details.save!
+
+        price = order.total
+        confirmed_price = params["PRICE"].to_i/100.0
+
+        order.complete!
+
+        # do the state change
+        if price == confirmed_price
+          order.pay!
+        elsif price < confirmed_price
+          order.over_pay!
+        elsif price > confirmed_price
+          order.under_pay!
+        else
+          raise "#{price} vs. #{confirmed price}".inspect
+        end
+      end
+    when "RESERVED"
+      raise "send the confirmation request out".inspect
+    else
+      raise "what is going on?".inspect
+    end
+
+    render :text => "OK", :status => 200
+=end
 
   private
+
+  def check_operation(operation)
+    if operation != "CONFIRMATION"
+      raise "unknown operation: #{operation}".inspect
+    end
+  end
+
+  def check_status(status)
+    if !TRANSACTION_STATES.include?(status)
+      raise "unknown status: #{status}".inspect
+    end
+  end
+
+  def find_order(tid)
+    if (order = Order.find(tid)).nil?
+      raise "could not find order: #{tid}".inspect
+    end
+
+    return order
+  end
+
+  def verify_currency(order, currency)
+    "EUR" == currency
+  end
+
   def adyen_auth
-    authenticate_or_request_with_http_basic do |user, pass|
+    authenticate_with_http_basic do |user, pass|
       user == ADYEN_NOTIFY_USER and pass == ADYEN_NOTIFY_PASS
     end
   end
-
 end

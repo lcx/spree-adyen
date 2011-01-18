@@ -12,5 +12,7 @@ Gem::Specification.new do |s|
 
   s.has_rdoc = true
 
+  s.add_dependency('handsoap', '>= 1.1.4')
+  s.add_dependency('adyen', '>= 0.3.8')
   s.add_dependency('spree_core', '>= 0.30.0.beta1')
 end
