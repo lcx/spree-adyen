@@ -4,8 +4,8 @@ class AdyenCallbacksController < Spree::BaseController
   TRANSACTION_STATES = ["ERROR", "RESERVED", "BILLED", "REVERSED", "CREDITED", "SUSPENDED"]
 
   # Confirmation interface is a GET request
-  def show
-    pp 'in show'
+  def create
+    pp 'in create'
     pp params
     Adyen::Notification::HttpPost.log(request)
     AdyenNotification.last.handle!

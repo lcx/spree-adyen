@@ -3,5 +3,5 @@ Rails.application.routes.draw do
   resources :adyen_confirmation, :only => [:index]
 
   # this is used to confirm payed orders
-  resource :adyen_callbacks, :controller => 'adyen_callbacks', :only => [:show]
+  resource :adyen_callbacks, :controller => 'adyen_callbacks', :only => [:create]
 end
