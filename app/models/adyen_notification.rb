@@ -9,7 +9,7 @@ class AdyenNotification < ActiveRecord::Base
         # A payment authorized successfully, so handle the payment
         # ...
         # flag the notification so we know that it has been processed
-        update_attribute(:payment_id, Payment.find_by_response_code(psp_reference.to_param)
+        update_attribute(:payment_id, Payment.find_by_response_code(psp_reference.to_param))
         payment.started_processing!
         call_capture!
         update_attribute(:processed, true)
