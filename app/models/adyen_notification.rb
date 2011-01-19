@@ -5,7 +5,6 @@ class AdyenNotification < ActiveRecord::Base
   def handle!
     payment = if event_code == 'AUTHORISATION'
       order = Order.find_by_number(merchant_reference)
-      pp order
       Payment.create(:order => order, :payment_method => BillingIntegration::AdyenIntegration.current, :response_code =>  psp_reference)
     else
       original_notification.payment
@@ -16,9 +15,7 @@ class AdyenNotification < ActiveRecord::Base
       case event_code
       when 'AUTHORISATION'
         payment.started_processing!
-        pp 'processing started'
         call_capture
-        pp 'capture called'
         update_attribute(:processed, true)
       when 'CAPTURE'
         payment.complete!
