@@ -7,7 +7,11 @@ class AdyenCallbacksController < Spree::BaseController
   # Confirmation interface is a GET request
   def create
     Adyen::Notification::HttpPost.log(request)
-    AdyenNotification.last.handle!
+    notification = AdyenNotification.last
+    pp 'notification'
+    pp notification
+    notification.handle!
+    pp 'notification handled'
   rescue ActiveRecord::RecordInvalid => e
     # Validation failed, because of the duplicate check.
     # So ignore this notification, it is already stored and handled.
