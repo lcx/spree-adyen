@@ -3,6 +3,7 @@ class AdyenNotification < ActiveRecord::Base
   belongs_to :original_notification, :class_name => "AdyenNotification", :foreign_key => "original_reference", :primary_key => "psp_reference"
 
   def handle!
+    puts 'handling'
     if event_code == 'AUTHORISATION'
       update_attribute(:payment_id, Payment.find_by_response_code(psp_reference).to_param)
     else
