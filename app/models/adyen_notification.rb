@@ -27,9 +27,8 @@ class AdyenNotification < ActiveRecord::Base
 
   def call_capture
     val = (value.to_f * 100).truncate
-    puts "value =#{val}"
     result = Adyen::SOAP::PaymentService.capture(:currency => currency, :value => val, :original_reference => psp_reference) 
 
-    puts result
+    result
   end
 end
