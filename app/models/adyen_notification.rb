@@ -3,21 +3,18 @@ class AdyenNotification < ActiveRecord::Base
   belongs_to :original_notification, :class_name => "AdyenNotification", :foreign_key => "original_reference", :primary_key => "psp_reference"
 
   def handle!
-    puts 'handling'
-    if event_code == 'AUTHORISATION'
-      update_attribute(:payment_id, Payment.find_by_response_code(psp_reference).to_param)
+    payment = if event_code == 'AUTHORISATION'
+      Payment.find_by_response_code(psp_reference)
     else
-      update_attribute(:payment_id, original_notification.payment_id)
+      original_notification.payment
     end
+    update_attribute(:payment_id, payment.to_param)
 
     if success?
       case event_code
       when 'AUTHORISATION'
-        puts 'Authorization'
         payment.started_processing!
-        puts 'payment state updated'
         call_capture
-        puts 'Capture called'
         update_attribute(:processed, true)
       when 'CAPTURE'
         payment.complete!
