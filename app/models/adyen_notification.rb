@@ -4,16 +4,13 @@ class AdyenNotification < ActiveRecord::Base
 
   def handle!
     payment = if event_code == 'AUTHORISATION'
-      pp 'psp ref:'
-      pp psp_reference
-      Payment.find_by_response_code(psp_reference)
+      order = Order.find_by_number(merchant_reference)
+      pp order
+      Payment.create(:order => order, :payment_method => BillingIntegration::AdyenIntegration.current, :response_code =>  psp_reference)
     else
       original_notification.payment
     end
     update_attribute(:payment_id, payment.to_param)
-
-    pp 'Payment:'
-    pp payment
 
     if success?
       case event_code

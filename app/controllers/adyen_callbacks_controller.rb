@@ -8,10 +8,7 @@ class AdyenCallbacksController < Spree::BaseController
   def create
     Adyen::Notification::HttpPost.log(request)
     notification = AdyenNotification.last
-    pp 'notification'
-    pp notification
     notification.handle!
-    pp 'notification handled'
   rescue ActiveRecord::RecordInvalid => e
     # Validation failed, because of the duplicate check.
     # So ignore this notification, it is already stored and handled.
