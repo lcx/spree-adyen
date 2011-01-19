@@ -6,8 +6,6 @@ class AdyenCallbacksController < Spree::BaseController
 
   # Confirmation interface is a GET request
   def create
-    pp 'in create'
-    pp params
     Adyen::Notification::HttpPost.log(request)
     AdyenNotification.last.handle!
   rescue ActiveRecord::RecordInvalid => e
