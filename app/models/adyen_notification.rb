@@ -4,17 +4,24 @@ class AdyenNotification < ActiveRecord::Base
 
   def handle!
     payment = if event_code == 'AUTHORISATION'
+      pp 'psp ref:'
+      pp psp_reference
       Payment.find_by_response_code(psp_reference)
     else
       original_notification.payment
     end
     update_attribute(:payment_id, payment.to_param)
 
+    pp 'Payment:'
+    pp payment
+
     if success?
       case event_code
       when 'AUTHORISATION'
         payment.started_processing!
+        pp 'processing started'
         call_capture
+        pp 'capture called'
         update_attribute(:processed, true)
       when 'CAPTURE'
         payment.complete!
