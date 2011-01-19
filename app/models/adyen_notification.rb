@@ -12,8 +12,11 @@ class AdyenNotification < ActiveRecord::Base
     if success?
       case event_code
       when 'AUTHORISATION'
+        puts 'Authorization'
         payment.started_processing!
+        puts 'payment state updated'
         call_capture
+        puts 'Capture called'
         update_attribute(:processed, true)
       when 'CAPTURE'
         payment.complete!
@@ -26,7 +29,9 @@ class AdyenNotification < ActiveRecord::Base
 
   def call_capture
     val = (value.to_f * 100).truncate
+    puts "value =#{val}"
     result = Adyen::SOAP::PaymentService.capture(:currency => currency, :value => val, :original_reference => psp_reference) 
+
     puts result
   end
 end
