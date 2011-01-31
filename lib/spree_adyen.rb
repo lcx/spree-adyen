@@ -1,5 +1,6 @@
 require 'adyen'
-require 'adyen/soap'
+require 'handsoap'
+#require 'adyen/soap'
 require 'active_merchant/billing/integrations/action_view_helper'
 require 'active_merchant/billing/integrations/adyen'
 require 'spree_core'
