@@ -23,10 +23,12 @@ class BillingIntegration::AdyenIntegration < BillingIntegration
 
   def self.register
     adyen = BillingIntegration::AdyenIntegration.first(:conditions => { :environment => Rails.env, :active => true })
-    Adyen::SOAP.username = adyen.preferred_soap_user
-    Adyen::SOAP.password = adyen.preferred_soap_password
-    Adyen::SOAP.default_arguments[:merchant_account] = adyen.merchant_id
-    ActiveMerchant::Billing::Base.integration_mode = adyen ? adyen.preferred_test_mode : true
+    if adyen
+      Adyen::SOAP.username = adyen.preferred_soap_user
+      Adyen::SOAP.password = adyen.preferred_soap_password
+      Adyen::SOAP.default_arguments[:merchant_account] = adyen.merchant_id
+      ActiveMerchant::Billing::Base.integration_mode = adyen ? adyen.preferred_test_mode : true
+    end  
     super
   end
 
