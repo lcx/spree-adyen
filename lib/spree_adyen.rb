@@ -1,6 +1,5 @@
 require 'adyen'
 require 'handsoap'
-require 'adyen/templates/notification_model'
 require 'active_merchant/billing/integrations/action_view_helper'
 require 'active_merchant/billing/integrations/adyen'
 require 'spree_core'
@@ -17,7 +16,6 @@ module SpreeAdyen
      
       CheckoutController.send :helper, ::AdyenHelper
       ActionView::Base.send(:include, ActiveMerchant::Billing::Integrations::ActionViewHelper)
-      ::AdyenNotification.send :include, BillingIntegration::AdyenNotification
     end
     config.to_prepare &method(:activate).to_proc
   end
