@@ -1,4 +1,4 @@
-module AdyenNotification < ActiveRecord::Base
+class AdyenNotification < ActiveRecord::Base
   belongs_to :payment
   belongs_to :original_notification, :class_name => "AdyenNotification", :foreign_key => "original_reference", :primary_key => "psp_reference"
 
