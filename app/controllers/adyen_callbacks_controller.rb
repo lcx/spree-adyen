@@ -6,7 +6,7 @@ class AdyenCallbacksController < Spree::BaseController
 
   # Confirmation interface is a GET request
   def create
-    AdyenNotification.log(request)
+#    AdyenNotification.log(request)
     notification = AdyenNotification.last
     notification.handle!
   rescue ActiveRecord::RecordInvalid => e
@@ -17,63 +17,6 @@ class AdyenCallbacksController < Spree::BaseController
     render :text => '[accepted]'
   end
     
-=begin
-    notification = ActiveMerchant::Billing::Integrations::Adyen::Notification.new(request.query_string)
-    
-    order = Order.find_by_number(notification.item_id)
-
-    case notification.event_code
-    when "AUTHORISED"
-      # check if the retrieved order is the same as the outgoing one
-      if verify_currency(order, params["CURRENCY"])
-
-        # create new payment object
-        payment_details = MPaySource.create (
-          :p_type => params["P_TYPE"],
-          :brand => params["BRAND"],
-          :mpayid => params["MPAYTID"]
-        )
-
-        payment_details.save!
-
-        # TODO log the payment
-        order.checkout.payments.create(
-          :amount => params["PRICE"],
-          :payment_method_id => nil,
-          :source => payment_details
-        )
-
-        payment = order.checkout.payments.first
-        payment.save!
-
-        payment_details.payment = payment
-        payment_details.save!
-
-        price = order.total
-        confirmed_price = params["PRICE"].to_i/100.0
-
-        order.complete!
-
-        # do the state change
-        if price == confirmed_price
-          order.pay!
-        elsif price < confirmed_price
-          order.over_pay!
-        elsif price > confirmed_price
-          order.under_pay!
-        else
-          raise "#{price} vs. #{confirmed price}".inspect
-        end
-      end
-    when "RESERVED"
-      raise "send the confirmation request out".inspect
-    else
-      raise "what is going on?".inspect
-    end
-
-    render :text => "OK", :status => 200
-=end
-
   private
 
   def check_operation(operation)

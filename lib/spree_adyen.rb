@@ -1,5 +1,4 @@
 require 'adyen'
-require 'adyen/templates/notification_model'
 require 'handsoap'
 require 'active_merchant/billing/integrations/action_view_helper'
 require 'active_merchant/billing/integrations/adyen'
