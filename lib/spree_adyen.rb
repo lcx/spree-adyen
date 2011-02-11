@@ -1,5 +1,6 @@
 require 'adyen'
 require 'handsoap'
+require 'adyen/templates/notification_model'
 require 'active_merchant/billing/integrations/action_view_helper'
 require 'active_merchant/billing/integrations/adyen'
 require 'spree_core'
