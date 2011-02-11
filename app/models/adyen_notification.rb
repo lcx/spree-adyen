@@ -29,7 +29,7 @@ pp 'HERE !', order, self
 
   def call_capture
     val = (value.to_f * 100).truncate
-    result = Adyen::SOAP::PaymentService.capture(:currency => currency, :value => val, :original_reference => psp_reference) 
+    result = Adyen::API::PaymentService.capture(:currency => currency, :value => val, :original_reference => psp_reference) 
 
     result
   end
