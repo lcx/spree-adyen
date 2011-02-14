@@ -10,6 +10,7 @@ class AdyenNotification < ActiveRecord::Base
       original_notification.payment
     end
     update_attribute(:payment_id, payment.to_param)
+pp self, payment
 
     if success?
       case event_code
@@ -28,6 +29,7 @@ class AdyenNotification < ActiveRecord::Base
 
   def call_capture
     val = value.to_i
+pp val, value
     result = ::Adyen::API::PaymentService.new(:psp_reference => psp_reference, :amount => {:currency => currency, :value => val}).capture
 
     result
