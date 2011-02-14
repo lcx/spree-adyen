@@ -27,7 +27,10 @@ class AdyenNotification < ActiveRecord::Base
   end
 
   def call_capture
-    result = ::Adyen::API::PaymentService.new(:psp_reference => psp_reference, :amount => {:currency => currency, :value => value}).capture
+    val = (value.to_f * 100).truncate
+    pp value
+    pp val
+    result = ::Adyen::API::PaymentService.new(:psp_reference => psp_reference, :amount => {:currency => currency, :value => val}).capture
 
     result
   end
