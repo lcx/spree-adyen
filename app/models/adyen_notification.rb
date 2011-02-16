@@ -3,13 +3,25 @@ class AdyenNotification < ActiveRecord::Base
   belongs_to :original_notification, :class_name => "AdyenNotification", :foreign_key => "original_reference", :primary_key => "psp_reference"
 
   def handle!
+    method = BillingIntegration::AdyenIntegration.current
+
     payment = if event_code == 'AUTHORISATION'
       order = Order.find_by_number(merchant_reference)
-      Payment.create(:order_id => order.id, :payment_method => BillingIntegration::AdyenIntegration.current, :response_code =>  psp_reference)
+      order_payment = order.payments.where(:payment_method_id => method.to_param).last
+
+pp 'AUTHO', order, order_payment, order.payments.count
+
+      if order_payment.blank?
+        Payment.create(:amount => value.to_f,:order_id => order.id, :payment_method_id => method.to_param, :response_code =>  psp_reference)
+      else
+        order_payment
+      end
     else
       original_notification.payment
     end
     update_attribute(:payment_id, payment.to_param)
+
+pp 'updated', order.payments.count
 
     if success?
       case event_code
