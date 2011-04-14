@@ -27,6 +27,7 @@ class BillingIntegration::AdyenIntegration < BillingIntegration
     if adyen
       Adyen.configuration.api_username = adyen.preferred_soap_user
       Adyen.configuration.api_password = adyen.preferred_soap_password
+      pp adyen.preferred_soap_user, adyen.preferred_soap_password
       Adyen.configuration.default_api_params[:merchant_account] = adyen.merchant_id
       ActiveMerchant::Billing::Base.integration_mode = adyen.preferred_test_mode ? :test : :production
     end  
