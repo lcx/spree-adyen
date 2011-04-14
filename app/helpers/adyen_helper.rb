@@ -11,12 +11,23 @@ module AdyenHelper
       service.shipping order.shipping_cost
       service.tax order.tax
 
-      service.set_order_data 'Please pay for your order with Raz*War'
+      details = order_details(order)
+      service.set_order_data details
+
       service.skinCode(payment_method.preferred_skin)
  
       service.shared_secret(payment_method.preferred_hmac)
       service.return_url("#{root_url}adyen_callbacks")
     end
     content
+  end
+
+  def order_details(order)
+    details = "<p>Order nr: #{order.number}</p>"
+    order.line_items.each {|li| details << "<p>#{li.quantity} #{li.variant.product.name}: #{li.price}</p>"}
+    details << "<p>Shipment: #{order.shipping_cost}</p>"
+    details << "<p>Coupon: #{order.dscount}</p>" if order.discount
+    details << "<p>Total: #{order.total}</p>"
+    details
   end
 end
