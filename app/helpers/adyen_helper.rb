@@ -26,7 +26,7 @@ module AdyenHelper
     details = "<p>Order nr: #{order.number}</p>"
     order.line_items.each {|li| details << "<p>#{li.quantity} #{li.variant.product.name}: #{li.price}</p>"}
     details << "<p>Shipment: #{order.shipping_cost}</p>"
-    details << "<p>Coupon: #{order.dscount}</p>" if order.discount
+    details << "<p>Coupon: #{order.discount}</p>" if order.discount
     details << "<p>Total: #{order.total}</p>"
     details
   end
