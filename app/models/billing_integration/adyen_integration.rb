@@ -26,7 +26,7 @@ class BillingIntegration::AdyenIntegration < BillingIntegration
     Adyen::SOAP.username = adyen.preferred_soap_user
     Adyen::SOAP.password = adyen.preferred_soap_password
     Adyen::SOAP.default_arguments[:merchant_account] = adyen.merchant_id
-    ActiveMerchant::Billing::Base.integration_mode = adyen ? adyen.preferred_test_mode : true
+    ActiveMerchant::Billing::Base.integration_mode = (!adyen || adyen.preferred_test_mode) ? :test : :production
     super
   end
 
