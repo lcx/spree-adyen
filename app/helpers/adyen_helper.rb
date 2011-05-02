@@ -29,6 +29,7 @@ module AdyenHelper
     details << "<p>Coupon: #{order.discount.amount}</p>" if order.discount
     details << "<p>VAT: #{order.vat_amount}</p>"
     details << "<p>Total: #{order.total}</p>"
+    pp details
     details
   end
 end
