@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = %q{spree-adyen}
-  s.version     = '0.0.1'
+  s.version     = '0.0.2'
   s.summary     = 'Spree Extension that enables payment through the Adyen provider'
   #s.description = 'Add (optional) gem description here'
   s.required_ruby_version = '>= 1.8.7'
