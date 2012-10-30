@@ -1,4 +1,4 @@
-class AdyenConfirmationController < Spree::BaseController
+class Spree::AdyenConfirmationController < Spree::BaseController
   include ActiveMerchant::Billing::Integrations
   protect_from_forgery :except => :index
 

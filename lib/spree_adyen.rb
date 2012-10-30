@@ -13,11 +13,18 @@ module SpreeAdyen
       Handsoap::http_driver= :net_http
       Handsoap::xml_query_driver= :rexml
 
-      BillingIntegration::AdyenIntegration.register
-     
-      CheckoutController.send :helper, ::AdyenHelper
+      Spree::BillingIntegration::AdyenIntegration.register
+
+      Spree::CheckoutController.send :helper, Spree::AdyenHelper
       ActionView::Base.send(:include, ActiveMerchant::Billing::Integrations::ActionViewHelper)
     end
+
+    config.after_initialize do |app|
+      app.config.spree.payment_methods += [
+        Spree::BillingIntegration::AdyenIntegration
+      ]
+    end
+
     config.to_prepare &method(:activate).to_proc
   end
 end

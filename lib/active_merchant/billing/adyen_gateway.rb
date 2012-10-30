@@ -1,6 +1,8 @@
 module ActiveMerchant
   module Billing
     class AdyenGateway < Gateway
+      class_attribute :test_mode
+
       self.test_mode = true
 
       def initialize(test_url, test_merchant_id, production_url, production_merchant_id)

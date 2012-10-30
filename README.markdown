@@ -5,6 +5,14 @@ This is the prototype of a adyen (http://www.adyen.com/) payment gateway.
 It cannot use the normale gateway integration stuff as it is based upon
 a HTTP redirect scheme (which offers security benefits).
 
+gem 'adyen'
+rails g adyen:install
+rake db:migrate
+
+gem 'spree-adyen'
+rails g spree_adyen:install
+rake db:migrate
+
 = License stuff =
 
 Adyen payment gateway integration for spree

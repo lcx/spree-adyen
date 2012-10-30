@@ -1,4 +1,4 @@
-class AdyenCallbacksController < Spree::BaseController
+class Spree::AdyenCallbacksController < Spree::BaseController
   protect_from_forgery :except => :create
   before_filter :adyen_auth
   # possible transaction states
@@ -16,7 +16,7 @@ class AdyenCallbacksController < Spree::BaseController
     # Always return that we have accepted the notification
     render :text => '[accepted]'
   end
-    
+
   private
 
   def check_operation(operation)
