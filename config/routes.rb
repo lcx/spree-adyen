@@ -1,7 +1,7 @@
-Rails.application.routes.draw do
+Spree::Core::Engine.routes.draw do
   # will be used for sucess messages
-  resources :adyen_confirmation, :only => [:index]
+  match '/adyen_confirmation' => 'adyen_confirmation#index'
 
   # this is used to confirm payed orders
-  resource :adyen_callbacks, :controller => 'adyen_callbacks', :only => [:create]
+  match '/adyen_callbacks' => 'adyen_callbacks#create'
 end

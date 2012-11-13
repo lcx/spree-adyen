@@ -6,7 +6,7 @@ class Spree::AdyenCallbacksController < Spree::BaseController
 
   # Confirmation interface is a GET request
   def create
-    notification = ::AdyenNotification.log(params)
+    notification = Spree::AdyenNotification.log(params)
     notification.handle!
   rescue ActiveRecord::RecordInvalid => e
     logger.error e
@@ -44,8 +44,8 @@ class Spree::AdyenCallbacksController < Spree::BaseController
   end
 
   def adyen_auth
-    preferred_user =  BillingIntegration::AdyenIntegration.current.preferred_notification_user
-    preferred_password =  BillingIntegration::AdyenIntegration.current.preferred_notification_password
+    preferred_user =  Spree::BillingIntegration::AdyenIntegration.current.preferred_notification_user
+    preferred_password =  Spree::BillingIntegration::AdyenIntegration.current.preferred_notification_password
     authenticate_with_http_basic do |user, pass|
       user == preferred_user and pass == preferred_password
     end

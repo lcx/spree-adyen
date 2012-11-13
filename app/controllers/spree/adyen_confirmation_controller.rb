@@ -7,7 +7,8 @@ class Spree::AdyenConfirmationController < Spree::BaseController
   def index
     notify = ActiveMerchant::Billing::Integrations::Adyen::Notification.new(request.query_string)
 
-    @order = Order.find_by_number(notify.item_id)
+    @order = Spree::Order.find_by_number(notify.item_id)
+
     begin
       if notify.complete?
         logger.debug("Order id: #{@order.id} paid") 
@@ -19,7 +20,7 @@ class Spree::AdyenConfirmationController < Spree::BaseController
     ensure
       @order.save!
     end
-    redirect_to update_checkout_path(:payment, :order => @order)
+    redirect_to checkout_state_path(:confirm, :order => @order)
   end
 
 end

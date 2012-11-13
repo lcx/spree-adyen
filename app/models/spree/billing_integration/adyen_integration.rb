@@ -17,6 +17,8 @@ module Spree
 
     TEST_REDIRECT_URL = 'https://test.adyen.com/hpp/select.shtml'
     PRODUCTION_REDIRECT_URL = 'https://live.adyen.com/hpp/select.shtml'
+    
+    attr_accessible :preferred_production_merchant_id, :preferred_test_merchant_id, :preferred_url, :preferred_hmac, :preferred_skin, :preferred_notification_user, :preferred_notification_password, :preferred_soap_user, :preferred_soap_password, :preferred_server, :preferred_test_mode
 
     def provider_class
       ActiveMerchant::Billing::AdyenGateway
@@ -24,7 +26,7 @@ module Spree
 
     def self.register
       adyen = Spree::BillingIntegration::AdyenIntegration.first(:conditions => { :environment => Rails.env, :active => true })
-
+ 
       if adyen
         Adyen.configuration.api_username = adyen.preferred_soap_user
         Adyen.configuration.api_password = adyen.preferred_soap_password
@@ -36,6 +38,10 @@ module Spree
 
     def self.current
       Spree::BillingIntegration::AdyenIntegration.first(:conditions => { :environment => Rails.env, :active => true })
+    end
+
+    def source_required?
+      false
     end
 
     def find_order(tid)

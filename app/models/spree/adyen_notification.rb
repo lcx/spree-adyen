@@ -1,7 +1,10 @@
 module Spree
   class AdyenNotification < ActiveRecord::Base
+    self.table_name = "adyen_notifications"
     belongs_to :payment
     belongs_to :original_notification, :class_name => "AdyenNotification", :foreign_key => "original_reference", :primary_key => "psp_reference"
+
+    attr_accessible :merchant_reference, :payment_method, :psp_reference, :event_date, :reason, :original_reference, :currency, :merchant_account_code, :event_code, :value, :operations, :success, :live, :response_code
 
     def handle!
       method = BillingIntegration::AdyenIntegration.current
@@ -11,7 +14,7 @@ module Spree
                   order_payment = order.payments.where(:payment_method_id => method.to_param).last
 
                   if order_payment.blank?
-                    Payment.create(:amount => value.to_f,:order_id => order.id, :payment_method_id => method.to_param, :response_code =>  psp_reference)
+                    Payment.create(:amount => value.to_f, :order_id => order.id, :payment_method_id => method.to_param, :response_code =>  psp_reference)
                   else
                     order_payment
                   end
@@ -64,6 +67,7 @@ module Spree
     def self.log(params)
       converted_params = {}
 
+      notification = self.new
       # Convert each attribute from CamelCase notation to under_score notation
       # For example, merchantReference will be converted to merchant_reference
       params.each do |key, value|
