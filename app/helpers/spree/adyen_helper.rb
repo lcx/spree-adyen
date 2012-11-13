@@ -28,7 +28,7 @@ module Spree
       details = "<p>Order nr: #{order.number}</p>"
       order.line_items.each {|li| details << "<p>#{li.quantity} #{li.variant.product.name}: #{li.price}</p>"}
       details << "<p>Shipment: #{order.ship_total}</p>"
-      details << "<p>Coupon: #{order.adjustments.eligible.promotion.map(&:amount).sum}</p>" if adjustments.eligible.promotion.map(&:amount).sum > 0
+      details << "<p>Coupon: #{order.adjustments.eligible.promotion.map(&:amount).sum}</p>" if order.adjustments.eligible.promotion.map(&:amount).sum > 0
       details << "<p>VAT: #{order.tax_total}</p>"
       details << "<p>Total: #{order.total}</p>"
       pp details
