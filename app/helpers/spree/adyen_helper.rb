@@ -4,10 +4,11 @@ module Spree
       payment_method = BillingIntegration::AdyenIntegration.current
       content = payment_service_for( order.id,
                                      payment_method.merchant_id,
+                                     :payment_method_id => payment_method.id,
                                      :amount => amount_in_cents(order.total),
                                      :currency => 'EUR',
                                      :service => :adyen,
-                                     :html => { :id => 'payment_form' } ) do |service|
+                                     :html => { :id => 'adyen-payment-form' } ) do |service|
         service.order order.number
         service.shipping order.ship_total
         service.tax order.tax_total
