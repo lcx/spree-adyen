@@ -64,6 +64,10 @@ module Spree
       prefers_test_mode? ? preferred_test_merchant_id : preferred_production_merchant_id
     end
 
+    def capture(payment_or_amount, account_or_response_code, gateway_options)
+      Spree::AdyenNotification.find_by_psp_reference(account_or_response_code).call_capture
+    end
+
     private
 
     def parse_result(response)

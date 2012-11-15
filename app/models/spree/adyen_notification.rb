@@ -6,6 +6,20 @@ module Spree
 
     attr_accessible :merchant_reference, :payment_method, :psp_reference, :event_date, :reason, :original_reference, :currency, :merchant_account_code, :event_code, :value, :operations, :success, :live, :response_code
 
+    def actions
+      %w{capture cancel}
+    end
+
+    def can_capture?(payment)
+      # check if there already was a capture for this payment
+      payment.state == "processing" && payment.source.event_code=="AUTHORISATION" && payment.source.processed && payment.source.success && !self.successful_capture? && self.created_at>20.days.ago
+    end
+
+    def can_cancel
+      # disable cancel for the moment! 
+      false
+    end
+
     def handle!
       method = BillingIntegration::AdyenIntegration.current
 
@@ -22,6 +36,8 @@ module Spree
                   original_notification.payment
                 end
       update_attribute(:payment_id, payment.to_param)
+      payment.update_attribute(:source_type,"Spree::AdyenNotification")
+      payment.update_attribute(:source_id,self.id)
 
       if success?
         case event_code
@@ -103,6 +119,10 @@ module Spree
     #   and the authorization was successful according to the success field.
     def successful_authorisation?
       event_code == 'AUTHORISATION' && success?
+    end
+
+    def successful_capture?
+      !Spree::AdyenNotification.where(:original_reference=>self.psp_reference).where(:event_code => "CAPTURE").where(:success => true).blank?
     end
 
     alias :successful_authorization? :successful_authorisation?
