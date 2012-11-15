@@ -15,7 +15,7 @@ module Spree
       payment.state == "processing" && payment.source.event_code=="AUTHORISATION" && payment.source.processed && payment.source.success && !self.successful_capture? && self.created_at>20.days.ago
     end
 
-    def can_cancel
+    def can_cancel?(payment)
       # disable cancel for the moment! 
       false
     end
