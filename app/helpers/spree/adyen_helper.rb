@@ -32,7 +32,6 @@ module Spree
       details << "<p>Coupon: #{order.adjustments.eligible.promotion.map(&:amount).sum}</p>" if order.adjustments.eligible.promotion.map(&:amount).sum > 0
       details << "<p>VAT: #{order.tax_total}</p>"
       details << "<p>Total: #{order.total}</p>"
-      pp details
       details
     end
 
