@@ -93,7 +93,9 @@ module Spree
         column_name = key.to_s.underscore
         converted_params[column_name] = value if self.column_names.include?(column_name)
       end
-
+      # don't do anything if we don't have data
+      return false if converted_params.blank?
+      
       # don't try to create duplicate entries. 
       # this will trigger a mysql error resulting in an exception 
       # and adyen will stop notifications if it doesn't receive a [accepted]
