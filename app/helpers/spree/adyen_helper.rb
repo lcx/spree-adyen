@@ -5,12 +5,12 @@ module Spree
       content = payment_service_for( order.id,
                                      payment_method.merchant_id,
                                      :payment_method_id => payment_method.id,
-                                     :amount => amount_in_cents(order.total),
+                                     :amount => amount_in_cents(order.read_attribute(:total)),
                                      :currency => 'EUR',
                                      :service => :adyen,
                                      :html => { :id => 'adyen-payment-form' } ) do |service|
         service.order order.number
-        service.shipping order.ship_total
+        service.shipping order.ship_total_raw
         service.tax order.tax_total
 
         details = order_details(order)
